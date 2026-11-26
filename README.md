@@ -1,119 +1,118 @@
+*This project has been created as part of the 42 curriculum by himekkao*
+
 # ft_printf
 
-`ft_printf` is a 1337/42 Common Core project that recreates the essential behavior of the C standard `printf` function.
+## Description
 
-The project focuses on variadic functions, format-string parsing, type conversion, hexadecimal representation, pointer handling, and static-library construction.
+ft_printf is a 42 Common Core project that consists of recreating
+the standard C printf function.
 
-## Objective
+The goal is to understand variadic functions, format-string parsing,
+and type conversions by implementing a function capable of handling
+different format specifiers and printing formatted output to
+standard output.
 
-Implement the following function:
+The project supports the mandatory conversions: c, s, p, d, i,
+u, x, X and %.
 
-```c
-int	ft_printf(const char *format, ...);
-```
+## Instructions
 
-The function writes formatted output to standard output and returns the number of characters written.
+### Compilation
 
-As required by the subject, this implementation does not reproduce `printf`'s internal buffer management.
+Run the following command at the root of the project to compile the library:
 
-## Mandatory conversions
-
-| Conversion | Description |
-| --- | --- |
-| `%c` | Prints a single character. |
-| `%s` | Prints a string. |
-| `%p` | Prints a pointer address in hexadecimal notation, prefixed with `0x`. |
-| `%d` | Prints a signed decimal integer. |
-| `%i` | Prints a signed integer in base 10. |
-| `%u` | Prints an unsigned decimal integer. |
-| `%x` | Prints an unsigned hexadecimal integer using lowercase letters. |
-| `%X` | Prints an unsigned hexadecimal integer using uppercase letters. |
-| `%%` | Prints a literal percent sign. |
-
-## Project requirements
-
-- The output library must be named `libftprintf.a`.
-- The library must be created with `ar`, not `libtool`.
-- The project must compile with `-Wall -Wextra -Werror`.
-- The Makefile must provide `all`, `clean`, `fclean`, and `re` rules.
-- The implementation must not crash unexpectedly or leak allocated memory.
-- No global variables are allowed.
-- `libft` may be used when its source and Makefile are included according to the subject rules.
-
-### Allowed functions
-
-The mandatory implementation is limited to:
-
-```text
-malloc  free  write
-va_start  va_arg  va_copy  va_end
-```
-
-Functions implemented in `libft` may also be used when allowed by the project configuration.
-
-## Build
-
-Compile the static library from the project root:
-
-```sh
+```bash
 make
 ```
 
-Other available commands:
+This generates `libftprintf.a`.
 
-```sh
-make clean   # Remove object files
-make fclean  # Remove object files and libftprintf.a
-make re      # Rebuild everything
-```
+### Usage
 
-## Usage
-
-Include the project header and link the generated library:
+Include the header in your source file:
 
 ```c
 #include "ft_printf.h"
+```
 
-int	main(void)
+Example:
+
+```c
+int main(void)
 {
-	ft_printf("Hello, %s! Number: %d\n", "1337", 42);
-	return (0);
+    ft_printf("Hello %s! Number: %d\n", "42", 1337);
+    return (0);
 }
 ```
 
-Example compilation command:
+### Execution
 
-```sh
-cc main.c -I. -L. -lftprintf -o example
-./example
+Compile your program and link it with the library:
+
+```bash
+cc main.c libftprintf.a
 ```
 
-## Bonus
+Run the executable:
 
-The bonus part extends the formatter with:
+```bash
+./a.out
+```
 
-- The `-`, `0`, and `.` flags.
-- The `#` flag for `%x` and `%X`.
-- The space and `+` flags.
-- Minimum field width for all conversions.
-- Combinations of the supported flags.
+### Makefile Rules
 
-Bonus support should be kept separate from the mandatory implementation and included through a `bonus` Makefile rule when applicable.
+| Command       | Description                          |
+| ------------- | ------------------------------------ |
+| `make`        | Compile the library.                 |
+| `make clean`  | Remove object files.                 |
+| `make fclean` | Remove object files and the library. |
+| `make re`     | Recompile the project.               |
 
-## Suggested tests
 
-Compare `ft_printf` with the system `printf` using:
+## Resources
 
-- Empty strings and `NULL` strings.
-- `0`, negative values, and `INT_MIN`.
-- `0` and `NULL` pointers.
-- Lowercase and uppercase hexadecimal output.
-- Several conversions in one format string.
-- Multiple calls and mixed argument types.
-- Return values and write-error behavior.
+- **ft_printf documentation:** Used to understand the project requirements and mandatory features.
+- **YouTube tutorials:** Used to understand variadic functions and how they work in C.
+- **Python Tutor:** Used to visualize and follow the execution of code step by step.
+- **AI assistance:** Used to ask questions, clarify programming concepts.
 
-Always check the project with the 42 Norm and a memory-leak checker before submission.
+### AI Usage
 
-## Reference
+AI was used for:
+- Organizing and improving the project documentation.
+- Visualizing and understanding programming concepts related to the project.
+- Clarifying technical explanations when needed.
 
-This README follows the 1337/42 `ft_printf` subject. See the [English subject PDF](https://github.com/f0rkr/42_subjects/blob/master/ft_printf.en.pdf) for the complete official specification.
+## Algorithm and Data Structures
+
+### Algorithm
+
+The implementation processes the format string from left to right, one character at a time.
+
+1. Check whether the format string is NULL. If so, return `-1`.
+2. Initialize the argument list, the index, and the character counter.
+3. Iterate through the format string until its null terminator is reached.
+4. If the current character is not `%`, print it directly using `ft_putchar()`.
+5. If `%` is encountered and is followed by another character, pass that character to `handle_format()`.
+6. `handle_format()` identifies the conversion specifier and calls the corresponding printing function.
+7. Add the number of characters printed to the counter.
+8. If a printing function returns `-1`, end the argument list and return `-1`.
+9. Once processing is complete, end the argument list and return the total number of characters printed.
+
+### Data Structures and Variables
+
+The implementation uses:
+
+- `va_list`: to access the variable arguments passed to `ft_printf`.
+- `const char *format`: to access the format string.
+- `int i`: to track the current position in the format string.
+- `int counter`: to count the total number of characters printed.
+- `int x`: to store the return value of printing functions and check for errors.
+
+### Justification
+
+A sequential parsing approach was chosen because it is simple and sufficient for handling the mandatory conversions.
+
+Separating conversion handling into `handle_format()` keeps the main function organized and delegates each conversion to its corresponding printing function.
+
+This approach avoids unnecessary complexity and makes the implementation easier to read, maintain, and extend.
